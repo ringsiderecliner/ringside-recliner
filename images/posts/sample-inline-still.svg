@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Sample inline wrestling still</title>
+  <desc id="desc">A retro television frame showing a wrestling ring and a large caption reading the moment it worked.</desc>
+  <defs>
+    <pattern id="lines" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M0 7.5h8" stroke="#171511" stroke-opacity=".09"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="#d9cda8"/>
+  <rect width="1600" height="900" fill="url(#lines)"/>
+  <rect x="120" y="90" width="1360" height="720" rx="16" fill="#171511"/>
+  <rect x="175" y="145" width="1250" height="610" fill="#b74a3a"/>
+  <path d="M250 625h1100M300 540h1000M350 455h900" stroke="#f1e7c8" stroke-width="18"/>
+  <path d="M250 625V390M1350 625V390" stroke="#f1e7c8" stroke-width="22"/>
+  <circle cx="800" cy="500" r="95" fill="#e5b83d" stroke="#171511" stroke-width="18"/>
+  <path d="M760 450l120 50-120 50z" fill="#171511"/>
+  <rect x="255" y="190" width="700" height="112" fill="#f1e7c8" transform="rotate(-2 255 190)"/>
+  <text x="300" y="270" font-family="Courier New, monospace" font-size="70" font-weight="700" fill="#171511">THE MOMENT IT WORKED</text>
+  <text x="1180" y="715" font-family="Courier New, monospace" font-size="34" fill="#f1e7c8">REC 00:47:18</text>
+</svg>

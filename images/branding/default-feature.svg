@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="t d">
+<title id="t">Ringside Recliner default feature artwork</title><desc id="d">A retro television, recliner and wrestling ring rendered as an old printed poster.</desc>
+<rect width="1600" height="900" fill="#e7d9b6"/><path d="M0 90h1600M0 180h1600M0 270h1600M0 360h1600M0 450h1600M0 540h1600M0 630h1600M0 720h1600M0 810h1600" stroke="#b9aa84" stroke-width="3" opacity=".45"/>
+<g fill="none" stroke="#171511" stroke-width="24"><rect x="160" y="150" width="720" height="470" rx="36"/><rect x="235" y="220" width="570" height="325" rx="10"/><path d="M340 620v100m360-100v100M940 695h430M1000 600l45-195h250l45 195M1045 405l-85-80m335 80l80-80M1015 470h315M1065 540h215"/></g>
+<circle cx="830" cy="245" r="20" fill="#b43a2f"/><circle cx="830" cy="315" r="20" fill="#4d7572"/><path d="M1130 735c-165 0-286 42-344 125h650c-45-79-146-125-306-125z" fill="#b43a2f" stroke="#171511" stroke-width="20"/>
+<path d="M300 770h420" stroke="#171511" stroke-width="26"/><text x="250" y="420" font-family="monospace" font-weight="700" font-size="92" fill="#171511">NO SIGNAL</text><text x="110" y="830" font-family="serif" font-weight="900" font-size="92" fill="#171511">RINGSIDE RECLINER</text>
+</svg>

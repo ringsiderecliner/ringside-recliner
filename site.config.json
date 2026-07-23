@@ -1,0 +1,9 @@
+{
+  "site_name": "Ringside Recliner",
+  "tagline": "Casual wrestling notes from the softest seat in the arena.",
+  "description": "Anonymous, casual pro wrestling commentary organised into show hubs and standalone posts.",
+  "site_url": "",
+  "default_featured_image": "images/branding/default-feature.svg",
+  "posts_on_homepage": 3,
+  "shows_on_homepage": 3
+}

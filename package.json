@@ -1,0 +1,15 @@
+{
+  "name": "ringside-recliner",
+  "version": "0.7.0",
+  "private": true,
+  "description": "A content-driven static wrestling blog with show hubs and standalone posts.",
+  "scripts": {
+    "build": "node tools/build.js",
+    "start": "node tools/dev.js",
+    "deploy:prepare": "node tools/prepare-deploy.js",
+    "deploy:check": "npm run build && npm run deploy:prepare"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
