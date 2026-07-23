@@ -16,16 +16,67 @@ const escapeHtml = (value = '') => String(value)
 function parseValue(raw) {
   const value = raw.trim();
   if (!value) return '';
-  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-    return value.slice(1, -1);
+  if (value.startsWith('"') && value.endsWith('"')) {
+    try { return JSON.parse(value); } catch { return value.slice(1, -1); }
+  }
+  if (value.startsWith("'") && value.endsWith("'")) {
+    return value.slice(1, -1).replaceAll("''", "'");
   }
   if (value.startsWith('[') || value.startsWith('{')) {
-    try { return JSON.parse(value); } catch { return value; }
+    try { return JSON.parse(value); } catch {
+      if (value.startsWith('[') && value.endsWith(']')) {
+        return value.slice(1, -1)
+          .split(',')
+          .map((item) => parseValue(item))
+          .filter((item) => item !== '');
+      }
+      return value;
+    }
   }
+  if (value === 'null' || value === '~') return null;
   if (value === 'true') return true;
   if (value === 'false') return false;
   if (/^-?\d+(\.\d+)?$/.test(value)) return Number(value);
   return value;
+}
+
+function parseFrontMatter(rawMeta) {
+  const lines = rawMeta.split('\n');
+  const data = {};
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+    const field = line.match(/^([A-Za-z0-9_-]+):(?:\s*(.*))?$/);
+    if (!field) continue;
+
+    const [, key, rawValue = ''] = field;
+    if (/^[>|][+-]?$/.test(rawValue)) {
+      const block = [];
+      while (index + 1 < lines.length && (/^\s/.test(lines[index + 1]) || !lines[index + 1].trim())) {
+        index += 1;
+        block.push(lines[index].replace(/^ {2}/, ''));
+      }
+      data[key] = rawValue.startsWith('>') ? block.join(' ').trim() : block.join('\n').trim();
+      continue;
+    }
+
+    if (!rawValue) {
+      const items = [];
+      while (index + 1 < lines.length) {
+        const item = lines[index + 1].match(/^\s+-\s+(.*)$/);
+        if (!item) break;
+        index += 1;
+        items.push(parseValue(item[1]));
+      }
+      data[key] = items.length ? items : '';
+      continue;
+    }
+
+    data[key] = parseValue(rawValue);
+  }
+
+  return data;
 }
 
 function parseContent(filePath) {
@@ -35,13 +86,7 @@ function parseContent(filePath) {
   if (end === -1) throw new Error(`${filePath} has an unclosed front-matter block.`);
   const rawMeta = source.slice(4, end);
   const body = source.slice(end + 5).trim();
-  const data = {};
-  for (const line of rawMeta.split('\n')) {
-    if (!line.trim() || line.trim().startsWith('#')) continue;
-    const colon = line.indexOf(':');
-    if (colon === -1) continue;
-    data[line.slice(0, colon).trim()] = parseValue(line.slice(colon + 1));
-  }
+  const data = parseFrontMatter(rawMeta);
   return { ...data, body, sourcePath: filePath };
 }
 
@@ -162,7 +207,10 @@ function typeSlug(type = 'Post') {
   return String(type).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 function padNote(value) { return String(value).padStart(2, '0'); }
-function relative(prefix, assetPath) { return `${prefix}${assetPath}`; }
+function relative(prefix, assetPath) {
+  if (isExternalAsset(assetPath)) return assetPath;
+  return `${prefix}${String(assetPath).replace(/^\/+/, '')}`;
+}
 function absoluteUrl(assetPath) {
   if (!config.site_url) return assetPath;
   return `${config.site_url.replace(/\/$/, '')}/${assetPath.replace(/^\//, '')}`;

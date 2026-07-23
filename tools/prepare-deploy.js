@@ -14,6 +14,7 @@ const publishItems = [
   'style.css',
   'script.js',
   '.nojekyll',
+  'admin',
   'images',
   'posts',
   'shows'

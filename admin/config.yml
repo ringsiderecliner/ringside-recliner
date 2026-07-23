@@ -1,0 +1,136 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: ringsiderecliner/ringside-recliner
+  branch: main
+  auth_methods: [token]
+  commit_messages:
+    create: 'Create {{collection}} "{{slug}}"'
+    update: 'Update {{collection}} "{{slug}}"'
+    delete: 'Delete {{collection}} "{{slug}}"'
+    uploadMedia: 'Upload "{{path}}"'
+    deleteMedia: 'Delete "{{path}}"'
+
+media_folder: /images/uploads
+public_folder: /images/uploads
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      max_file_size: 10485760
+
+collections:
+  - name: shows
+    label: Shows
+    label_singular: Show
+    folder: content/shows
+    media_folder: /images/shows
+    public_folder: /images/shows
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{fields.slug}}'
+    identifier_field: title
+    summary: '{{title}} — {{date}}'
+    sortable_fields: [date, title, tape]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, type: date }
+      - label: Slug
+        name: slug
+        widget: string
+        hint: Used in the show URL and by posts. Use lowercase words separated by hyphens; do not change it after posts are attached.
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Use lowercase letters, numbers, and single hyphens only.']
+      - { label: Tape number, name: tape, widget: string, required: false, hint: 'For example: 002' }
+      - { label: Promotion, name: promotion, widget: string, required: false }
+      - { label: Format, name: format, widget: string, required: false, hint: 'For example: Weekly TV or Premium live event' }
+      - { label: Card summary, name: summary, widget: text }
+      - { label: Best bit, name: best_bit, widget: string, required: false }
+      - { label: Remote throw, name: remote_throw, widget: string, required: false }
+      - { label: Final posture, name: final_posture, widget: string, required: false }
+      - { label: Final sentence, name: final_sentence, widget: text, required: false }
+      - label: Featured image
+        name: featured_image
+        widget: image
+        required: false
+        hint: Leave blank to use the site default.
+      - { label: Featured image alt text, name: featured_image_alt, widget: string, required: false }
+      - label: Featured image crop position
+        name: image_position
+        widget: string
+        required: false
+        default: 50% 50%
+        hint: 'CSS object position, such as 50% 25%, center, or left top.'
+      - { label: Featured image caption, name: image_caption, widget: text, required: false }
+      - { label: Featured image credit, name: image_credit, widget: string, required: false }
+      - label: Show introduction
+        name: body
+        widget: richtext
+        modes: [rich_text, raw]
+        editor_components: [image]
+
+  - name: posts
+    label: Posts
+    label_singular: Post
+    folder: content/posts
+    media_folder: /images/posts
+    public_folder: /images/posts
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{fields.slug}}'
+    identifier_field: title
+    summary: 'Note {{note_number}} · {{title}} — {{date}}'
+    sortable_fields: [date, note_number, title, type]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, type: date }
+      - label: Slug
+        name: slug
+        widget: string
+        hint: Used in the post URL. Use lowercase words separated by hyphens.
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Use lowercase letters, numbers, and single hyphens only.']
+      - label: Parent show
+        name: show_slug
+        widget: relation
+        collection: shows
+        value_field: '{{fields.slug}}'
+        display_fields: ['{{title}} — {{date}}']
+        search_fields: [title, date, slug]
+      - { label: Note number, name: note_number, widget: number, value_type: int, min: 1 }
+      - { label: Moment, name: moment, widget: string }
+      - label: Type
+        name: type
+        widget: select
+        options: [Segment Note, Match Note, Remote Throw, VHS Save]
+      - { label: Reading time, name: read_time, widget: string, hint: 'For example: 4 min read' }
+      - { label: Excerpt, name: excerpt, widget: text }
+      - { label: Rating, name: rating, widget: string, required: false, hint: 'For example: 3.5 / 5 cushions' }
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - label: Featured image
+        name: featured_image
+        widget: image
+        required: false
+        hint: Leave blank to inherit the parent show's image.
+      - { label: Featured image alt text, name: featured_image_alt, widget: string, required: false }
+      - label: Featured image crop position
+        name: image_position
+        widget: string
+        required: false
+        default: 50% 50%
+        hint: 'CSS object position, such as 50% 25%, center, or left top.'
+      - { label: Featured image caption, name: image_caption, widget: text, required: false }
+      - { label: Featured image credit, name: image_credit, widget: string, required: false }
+      - label: Article
+        name: body
+        widget: richtext
+        modes: [rich_text, raw]
+        editor_components: [image]
