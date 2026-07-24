@@ -18,3 +18,5 @@ image_credit: Open AI
 ---
 
 Let's begin, shall we...
+
+Just look a little bit lower for the first "Tape"
