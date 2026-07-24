@@ -6,7 +6,7 @@ show_slug: my-first-promo
 note_number: 1
 moment: The first
 type: Segment Note
-read_time: idk, maybe you're a slow reader
+read_time: Reading time? idk, 2 min or something?
 excerpt: '"I use AI, deal with it"'
 rating: '0'
 tags:
