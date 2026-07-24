@@ -220,6 +220,7 @@ function write(file, content) {
   fs.writeFileSync(file, content.trimStart(), 'utf8');
 }
 function loadDirectory(dir) {
+  if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir)
     .filter((name) => name.endsWith('.md') && !name.startsWith('_'))
     .map((name) => parseContent(path.join(dir, name)));
@@ -373,7 +374,7 @@ function renderHomeShowCard(show, index) {
   </article>`;
 }
 
-const latestShow = shows[0];
+const latestShow = shows[0] || null;
 const latestShowImg = imageData(latestShow, null);
 const homeContent = `<main id="main" class="shell home-layout">
   <section class="hero paper crooked-right">
@@ -383,7 +384,7 @@ const homeContent = `<main id="main" class="shell home-layout">
     <p class="lede">Loose notes on great matches, strange finishes, and whatever still bothers me after the bell.</p>
     <div class="button-row">
       <a class="button" href="shows.html">Browse all shows</a>
-      <a class="button ghost" href="shows/${latestShow.slug}.html">Latest show</a>
+      ${latestShow ? `<a class="button ghost" href="shows/${latestShow.slug}.html">Latest show</a>` : ''}
       <a class="button ghost" href="archive.html">Post archive</a>
     </div>
   </section>
@@ -393,7 +394,7 @@ const homeContent = `<main id="main" class="shell home-layout">
     <p>Open a show hub to read every note in viewing order, or use the post archive when you only want individual ramblings.</p>
     <a class="text-link" href="shows.html">Browse all shows →</a>
   </aside>
-  <section class="show-window paper" aria-labelledby="latest-show-title">
+  ${latestShow ? `<section class="show-window paper" aria-labelledby="latest-show-title">
     <div class="tv-bar"><span>PLAY ▶</span><span>SP</span><span>00:47:18</span></div>
     <div class="show-window-inner show-window-grid">
       <div>
@@ -408,16 +409,23 @@ const homeContent = `<main id="main" class="shell home-layout">
       </div>
       ${featureFigure(latestShowImg, '', 'compact-feature')}
     </div>
-  </section>
+  </section>` : `<section class="show-window paper" aria-labelledby="latest-show-title">
+    <div class="tv-bar"><span>STOP</span><span>SP</span><span>--:--:--</span></div>
+    <div class="show-window-inner">
+      <p class="eyebrow">NO TAPE LOADED</p>
+      <h2 id="latest-show-title">The shelf is empty.</h2>
+      <p>Add the first show from the authoring dashboard, then come back when the tracking has settled.</p>
+    </div>
+  </section>`}
   <section class="home-show-library paper" aria-labelledby="home-shows-title">
     <div class="directory-heading"><div><p class="eyebrow">THE TAPE LIBRARY</p><h2 id="home-shows-title">Recent shows</h2><p>Jump into a complete viewing log instead of digging through individual posts.</p></div><a class="button small" href="shows.html">Browse every show</a></div>
     <div class="home-show-grid">
-      ${shows.slice(0, Number(config.shows_on_homepage || 3)).map(renderHomeShowCard).join('\n')}
+      ${shows.length ? shows.slice(0, Number(config.shows_on_homepage || 3)).map(renderHomeShowCard).join('\n') : '<p class="empty-state">No shows have been recorded yet.</p>'}
     </div>
   </section>
   <section class="latest-stack">
     <div class="section-heading"><div><p class="eyebrow">LATEST INDIVIDUAL POSTS</p><h2>Fresh from the recliner</h2></div><a class="text-link" href="archive.html">Full post archive →</a></div>
-    ${posts.slice(0, Number(config.posts_on_homepage || 3)).map(renderHomePost).join('\n')}
+    ${posts.length ? posts.slice(0, Number(config.posts_on_homepage || 3)).map(renderHomePost).join('\n') : '<p class="empty-state paper">No standalone notes have been published yet.</p>'}
   </section>
   <aside class="paper recurring-card crooked-left">
     <p class="hand-label">Two ways to read</p>
@@ -431,10 +439,10 @@ const homeContent = `<main id="main" class="shell home-layout">
 write(path.join(ROOT, 'index.html'), documentPage({ title: 'Home', description: config.description, image: latestShowImg.src, bodyClass: 'home-page', activePage: 'home', content: homeContent }));
 
 const showsContent = `<main id="main" class="shell single-column shows-directory-page">
-  <header class="page-intro paper show-directory-intro"><p class="eyebrow">THE COMPLETE TAPE LIBRARY</p><h1>Shows</h1><p class="lede">Choose a show first, then read its notes in the order they happened. Every thought still remains available separately in the post archive.</p><div class="directory-actions"><a class="button" href="shows/${latestShow.slug}.html">Play latest tape</a><a class="button ghost" href="archive.html">Browse individual posts</a></div></header>
+  <header class="page-intro paper show-directory-intro"><p class="eyebrow">THE COMPLETE TAPE LIBRARY</p><h1>Shows</h1><p class="lede">Choose a show first, then read its notes in the order they happened. Every thought still remains available separately in the post archive.</p><div class="directory-actions">${latestShow ? `<a class="button" href="shows/${latestShow.slug}.html">Play latest tape</a>` : ''}<a class="button ghost" href="archive.html">Browse individual posts</a></div></header>
   <div class="directory-heading directory-heading-dark"><div><p class="eyebrow">${shows.length} RECORDED ${shows.length === 1 ? 'SHOW' : 'SHOWS'}</p><h2>All viewing logs</h2></div><p>Newest first. No hidden shelves.</p></div>
   <section class="show-directory" aria-label="All show viewing logs">
-    ${shows.map((show, index) => {
+    ${shows.length ? shows.map((show, index) => {
       const img = imageData(show, null);
       const href = `shows/${show.slug}.html`;
       return `<article class="show-library-card paper">
@@ -448,7 +456,7 @@ const showsContent = `<main id="main" class="shell single-column shows-directory
           <div class="show-card-footer"><div class="tag-row"><span>${escapeHtml(show.promotion || 'Wrestling')}</span><span>${show.posts.length} posts</span></div><a class="button small" href="${href}">Open show notes</a></div>
         </div>
       </article>`;
-    }).join('\n')}
+    }).join('\n') : '<p class="empty-state paper">No viewing logs yet. The first tape is waiting to be added.</p>'}
   </section>
 </main>`;
 write(path.join(ROOT, 'shows.html'), documentPage({ title: 'Shows', description: 'Browse every wrestling show hub and its complete collection of standalone commentary posts.', image: latestShowImg.src, bodyClass: 'shows-page', activePage: 'shows', content: showsContent }));
@@ -473,7 +481,7 @@ const archiveContent = `<main id="main" class="shell single-column">
         ${cardImage(img).replace('#IMAGE_LINK#', href).replace('#IMAGE_LABEL#', `Read ${escapeHtml(post.title)}`)}
       </article>`;
     }).join('\n')}
-    <p class="empty-state paper" data-empty-state hidden>No notes matched that search. The tape may have eaten them.</p>
+    <p class="empty-state paper" data-empty-state${posts.length ? ' hidden' : ''}>${posts.length ? 'No notes matched that search. The tape may have eaten them.' : 'No posts have been published yet.'}</p>
   </section>
 </main>`;
 write(path.join(ROOT, 'archive.html'), documentPage({ title: 'Archive', description: 'Browse and filter every standalone post from Ringside Recliner.', image: latestShowImg.src, activePage: 'archive', content: archiveContent }));
