@@ -18,7 +18,7 @@ image_caption: ''
 image_credit: ''
 ---
 
-# So it begins...
+## So it begins...
 
 I have recently gotten back into watching pro wrestling and by 'recently' I mean I started watching about two years ago. Don't get me wrong, I'm not a 'new' fan and the WWF/WWE was a big part of my childhood (Just ask my parents' broken bed after a very successful F5). 
 
@@ -30,14 +30,15 @@ Now with a new perspective, a better insight, and finally admitting that wrestli
 - I will remain anonymous unless some party pooper on the internet wants to expose my identity, in which case... fuck you I don't care. 
 - My opinions are just that, opinions. If you think they are wrong, then cool, go write your own blog then. 
 - The format might be weird at the start for new readers, but essentially just imagine each post about a show has mini posts inside of it so you can just click and read the stuff you want to. Basically it's blogs inside blogs. See? Easy.
+- There is a recliner rating at the end of every post I make, just a rating out of 5 with some fluff in the name of the rating, don't mind the wording
+- There is a posture rating too, and that is just another piece of fun fluff for the blog
 
-
-Now for the elephant in the room. You might catch it on the feature image of this first post, but if you haven't I'm calling it out now so there is no ambiguity or misleading you. I **_DO_** use AI to help me with this blog so I will tell you exactly how I use it so there is no mistaking what is me and what is the clanker... 
+Now for the elephant in the room. You might catch it on the feature image of this first post, but if you haven't I'm calling it out now so there is no ambiguity or misleading you. I **DO** use AI to help me with this blog so I will tell you exactly how I use it so there is no mistaking what is me and what is the clanker... 
 
 I use AI for the development of the actual website, making improvements, adding features, improving reader experience. I didn't want to use one of those cookie cutter third party sites that let's you start your own blog. I think having 100% control over how I want to present this to people is the best way to go.
 
 I use AI to maybe generate an image here and there, this will not happen often since we are working with live shows and I can just screenshot some shit for my posts. So don't go yelling "ThAt iS AI gEnEraTeD!!!!", because 1. I will always disclose that in the image credits and 2. There is no comment section to yell in... yet...
 
-Writing will always be 100% me. No, that doesn't mean I write a post then let Chat GPT clean it up afterwards. I mean I write this from start to finish. If you find a grammar mistake, a spelling mistake, write a paragraph that doesn't feel like it flows correctly then pipe down, English isn't my first language! 
+Writing will always be 100% me. No, that doesn't mean I write a post then let Chat GPT clean it up afterwards. I mean I write this from start to finish. If you find a grammar mistake, a spelling mistake, a paragraph that doesn't feel like it flows correctly then pipe down, English isn't my first language! 
 
 I promise I'm not always this aggressive in my writing. So sit back, relax, make sure your recliner is all the way back and hopefully this actually goes somewhere.
