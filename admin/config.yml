@@ -12,6 +12,9 @@ backend:
     uploadMedia: 'Upload "{{path}}"'
     deleteMedia: 'Delete "{{path}}"'
 
+site_url: https://ringsiderecliner.github.io/ringside-recliner
+display_url: https://ringsiderecliner.github.io/ringside-recliner
+
 media_folder: /images/uploads
 public_folder: /images/uploads
 
@@ -33,10 +36,17 @@ collections:
     extension: md
     format: yaml-frontmatter
     slug: '{{fields.slug}}'
+    preview_path: shows/{{slug}}.html
     identifier_field: title
     summary: '{{title}} — {{date}}'
     sortable_fields: [date, title, tape]
     fields:
+      - label: Live on public site
+        name: published
+        widget: boolean
+        required: false
+        default: false
+        hint: Leave off while writing. Draft shows and their posts are available by direct preview URL but hidden from public listings, RSS and the sitemap.
       - { label: Title, name: title, widget: string }
       - { label: Date, name: date, widget: datetime, type: date }
       - label: Slug
@@ -83,6 +93,7 @@ collections:
     extension: md
     format: yaml-frontmatter
     slug: '{{fields.slug}}'
+    preview_path: posts/{{slug}}.html
     identifier_field: title
     summary: 'Note {{note_number}} · {{title}} — {{date}}'
     sortable_fields: [date, note_number, title, type]

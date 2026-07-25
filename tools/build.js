@@ -246,7 +246,7 @@ function imageData(item, show) {
   };
 }
 
-function head({ title, description, prefix = '', image }) {
+function head({ title, description, prefix = '', image, noindex = false }) {
   const imageHref = image ? (config.site_url ? absoluteUrl(image) : relative(prefix, image)) : '';
   return `<!doctype html>
 <html lang="en">
@@ -255,6 +255,7 @@ function head({ title, description, prefix = '', image }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)} | ${escapeHtml(config.site_name)}</title>
   <meta name="description" content="${escapeHtml(description || config.description)}">
+  ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
   <meta name="color-scheme" content="light">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description || config.description)}">
@@ -300,8 +301,8 @@ function siteFooter(prefix = '') {
 <script src="${prefix}script.js"></script>`;
 }
 
-function documentPage({ title, description, prefix = '', bodyClass = '', image, content, activePage = '' }) {
-  return `${head({ title, description, prefix, image })}
+function documentPage({ title, description, prefix = '', bodyClass = '', image, content, activePage = '', noindex = false }) {
+  return `${head({ title, description, prefix, image, noindex })}
 <body class="${bodyClass}">
 ${siteHeader(prefix, activePage)}
 ${content}
@@ -339,6 +340,9 @@ posts.sort((a,b) => b.date.localeCompare(a.date) || Number(a.note_number) - Numb
 for (const show of shows) {
   show.posts = posts.filter((post) => post.show_slug === show.slug).sort((a,b) => Number(a.note_number) - Number(b.note_number));
 }
+const publishedShows = shows.filter((show) => show.published !== false);
+const publishedShowSlugs = new Set(publishedShows.map((show) => show.slug));
+const publishedPosts = posts.filter((post) => publishedShowSlugs.has(post.show_slug));
 
 cleanGenerated(path.join(ROOT, 'posts'));
 cleanGenerated(path.join(ROOT, 'shows'));
@@ -374,7 +378,7 @@ function renderHomeShowCard(show, index) {
   </article>`;
 }
 
-const latestShow = shows[0] || null;
+const latestShow = publishedShows[0] || null;
 const latestShowImg = imageData(latestShow, null);
 const homeContent = `<main id="main" class="shell home-layout">
   <section class="hero paper crooked-right">
@@ -420,12 +424,12 @@ const homeContent = `<main id="main" class="shell home-layout">
   <section class="home-show-library paper" aria-labelledby="home-shows-title">
     <div class="directory-heading"><div><p class="eyebrow">THE TAPE LIBRARY</p><h2 id="home-shows-title">Recent shows</h2><p>Jump into a complete viewing log instead of digging through individual posts.</p></div><a class="button small" href="shows.html">Browse every show</a></div>
     <div class="home-show-grid">
-      ${shows.length ? shows.slice(0, Number(config.shows_on_homepage || 3)).map(renderHomeShowCard).join('\n') : '<p class="empty-state">No shows have been recorded yet.</p>'}
+      ${publishedShows.length ? publishedShows.slice(0, Number(config.shows_on_homepage || 3)).map(renderHomeShowCard).join('\n') : '<p class="empty-state">No shows have been recorded yet.</p>'}
     </div>
   </section>
   <section class="latest-stack">
     <div class="section-heading"><div><p class="eyebrow">LATEST INDIVIDUAL POSTS</p><h2>Fresh from the recliner</h2></div><a class="text-link" href="archive.html">Full post archive →</a></div>
-    ${posts.length ? posts.slice(0, Number(config.posts_on_homepage || 3)).map(renderHomePost).join('\n') : '<p class="empty-state paper">No standalone notes have been published yet.</p>'}
+    ${publishedPosts.length ? publishedPosts.slice(0, Number(config.posts_on_homepage || 3)).map(renderHomePost).join('\n') : '<p class="empty-state paper">No standalone notes have been published yet.</p>'}
   </section>
   <aside class="paper recurring-card crooked-left">
     <p class="hand-label">Two ways to read</p>
@@ -440,9 +444,9 @@ write(path.join(ROOT, 'index.html'), documentPage({ title: 'Home', description: 
 
 const showsContent = `<main id="main" class="shell single-column shows-directory-page">
   <header class="page-intro paper show-directory-intro"><p class="eyebrow">THE COMPLETE TAPE LIBRARY</p><h1>Shows</h1><p class="lede">Choose a show first, then read its notes in the order they happened. Every thought still remains available separately in the post archive.</p><div class="directory-actions">${latestShow ? `<a class="button" href="shows/${latestShow.slug}.html">Play latest tape</a>` : ''}<a class="button ghost" href="archive.html">Browse individual posts</a></div></header>
-  <div class="directory-heading directory-heading-dark"><div><p class="eyebrow">${shows.length} RECORDED ${shows.length === 1 ? 'SHOW' : 'SHOWS'}</p><h2>All viewing logs</h2></div><p>Newest first. No hidden shelves.</p></div>
+  <div class="directory-heading directory-heading-dark"><div><p class="eyebrow">${publishedShows.length} RECORDED ${publishedShows.length === 1 ? 'SHOW' : 'SHOWS'}</p><h2>All viewing logs</h2></div><p>Newest first. No hidden shelves.</p></div>
   <section class="show-directory" aria-label="All show viewing logs">
-    ${shows.length ? shows.map((show, index) => {
+    ${publishedShows.length ? publishedShows.map((show, index) => {
       const img = imageData(show, null);
       const href = `shows/${show.slug}.html`;
       return `<article class="show-library-card paper">
@@ -461,16 +465,16 @@ const showsContent = `<main id="main" class="shell single-column shows-directory
 </main>`;
 write(path.join(ROOT, 'shows.html'), documentPage({ title: 'Shows', description: 'Browse every wrestling show hub and its complete collection of standalone commentary posts.', image: latestShowImg.src, bodyClass: 'shows-page', activePage: 'shows', content: showsContent }));
 
-const types = [...new Set(posts.map((post) => post.type))];
+const types = [...new Set(publishedPosts.map((post) => post.type))];
 const archiveContent = `<main id="main" class="shell single-column">
   <header class="page-intro paper crooked-left"><p class="eyebrow">EVERY TAKE, INCLUDING THE BAD ONES</p><h1>The Archive</h1><p class="lede">Each item below is a standalone post, even when it also belongs to a larger show window.</p></header>
   <section class="archive-tools paper" aria-label="Archive filters">
     <label for="archive-search">Search the pile</label><input id="archive-search" type="search" placeholder="Try: camera, finish, match…" data-archive-search>
     <div class="filter-row" role="group" aria-label="Filter archive by post type"><button class="filter-button active" type="button" data-filter="all">Everything</button>${types.map((type) => `<button class="filter-button" type="button" data-filter="${typeSlug(type)}">${escapeHtml(type)}</button>`).join('')}</div>
-    <p class="archive-count" data-archive-count>Showing ${posts.length} posts</p>
+    <p class="archive-count" data-archive-count>Showing ${publishedPosts.length} posts</p>
   </section>
   <section class="archive-list" data-archive-list>
-    ${posts.map((post) => {
+    ${publishedPosts.map((post) => {
       const show = showMap.get(post.show_slug);
       const d = dateParts(post.date);
       const img = imageData(post, show);
@@ -481,7 +485,7 @@ const archiveContent = `<main id="main" class="shell single-column">
         ${cardImage(img).replace('#IMAGE_LINK#', href).replace('#IMAGE_LABEL#', `Read ${escapeHtml(post.title)}`)}
       </article>`;
     }).join('\n')}
-    <p class="empty-state paper" data-empty-state${posts.length ? ' hidden' : ''}>${posts.length ? 'No notes matched that search. The tape may have eaten them.' : 'No posts have been published yet.'}</p>
+    <p class="empty-state paper" data-empty-state${publishedPosts.length ? ' hidden' : ''}>${publishedPosts.length ? 'No notes matched that search. The tape may have eaten them.' : 'No posts have been published yet.'}</p>
   </section>
 </main>`;
 write(path.join(ROOT, 'archive.html'), documentPage({ title: 'Archive', description: 'Browse and filter every standalone post from Ringside Recliner.', image: latestShowImg.src, activePage: 'archive', content: archiveContent }));
@@ -513,7 +517,7 @@ for (const show of shows) {
     </section>
     <aside class="paper end-of-tape"><p class="eyebrow">END OF TAPE</p><h2>The whole show in one sentence</h2><p>${escapeHtml(show.final_sentence || show.summary || '')}</p><a class="button small" href="../archive.html">See every standalone post</a></aside>
   </main>`;
-  write(path.join(ROOT, 'shows', `${show.slug}.html`), documentPage({ title: `${show.title} — Recliner Notes`, description: show.summary, prefix: '../', image: img.src, activePage: 'shows', content: showContent }));
+  write(path.join(ROOT, 'shows', `${show.slug}.html`), documentPage({ title: `${show.title} — Recliner Notes`, description: show.summary, prefix: '../', image: img.src, activePage: 'shows', content: showContent, noindex: show.published === false }));
 }
 
 for (const show of shows) {
@@ -526,11 +530,11 @@ for (const show of shows) {
       <article class="article paper post-article"><a class="back-link" href="../shows/${show.slug}.html#note-${padNote(post.note_number)}">← Back to this show window</a><p class="eyebrow">NOTE ${padNote(post.note_number)} OF ${padNote(show.posts.length)} // ${escapeHtml(post.type)}</p><h1>${escapeHtml(post.title)}</h1><div class="byline-strip"><span>${escapeHtml(show.title)}</span><span>${longDate(post.date)}</span><span>${escapeHtml(post.read_time || '')}</span></div>${featureFigure(img, '../')}<p class="lede">${escapeHtml(post.excerpt)}</p><div class="content-body">${markdownToHtml(post.body, { prefix: '../', sourcePath: post.sourcePath })}</div><div class="rating-box"><span>RECLINER RATING</span><strong>${escapeHtml(post.rating || 'Not rated')}</strong></div><div class="tag-row"><a href="../shows/${show.slug}.html">${escapeHtml(show.title)}</a><span>${escapeHtml(post.type)}</span>${tagList.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div><div class="post-pager">${previous ? `<a href="${previous.slug}.html"><span>Previous note</span>${escapeHtml(previous.title)}</a>` : '<span></span>'}${next ? `<a class="next" href="${next.slug}.html"><span>Next note</span>${escapeHtml(next.title)}</a>` : ''}</div></article>
       <aside class="article-aside"><div class="paper show-context taped"><p class="hand-label">Part of a larger tape</p><h2>${escapeHtml(show.title)}</h2><p>This post also appears as note ${padNote(post.note_number)} inside the complete viewing log.</p><a class="button small" href="../shows/${show.slug}.html">Open all ${show.posts.length} notes</a><span class="image-fallback-note">Featured image: ${img.source}</span></div></aside>
     </main>`;
-    write(path.join(ROOT, 'posts', `${post.slug}.html`), documentPage({ title: post.title, description: post.excerpt, prefix: '../', bodyClass: 'post-page', image: img.src, activePage: 'archive', content: postContent }));
+    write(path.join(ROOT, 'posts', `${post.slug}.html`), documentPage({ title: post.title, description: post.excerpt, prefix: '../', bodyClass: 'post-page', image: img.src, activePage: 'archive', content: postContent, noindex: show.published === false }));
   });
 }
 
-const rssItems = posts.slice(0, 30).map((post) => {
+const rssItems = publishedPosts.slice(0, 30).map((post) => {
   const show = showMap.get(post.show_slug);
   const link = config.site_url ? `${config.site_url.replace(/\/$/, '')}/posts/${post.slug}.html` : `posts/${post.slug}.html`;
   return `<item><title>${escapeHtml(post.title)}</title><link>${escapeHtml(link)}</link><guid>${escapeHtml(link)}</guid><pubDate>${rssDate(post.date)}</pubDate><description>${escapeHtml(`${post.excerpt} — ${show.title}`)}</description></item>`;
@@ -538,8 +542,9 @@ const rssItems = posts.slice(0, 30).map((post) => {
 write(path.join(ROOT, 'rss.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel><title>${escapeHtml(config.site_name)}</title><link>${escapeHtml(config.site_url || 'index.html')}</link><description>${escapeHtml(config.description)}</description>${rssItems}</channel></rss>`);
 
-const sitemapPaths = ['index.html','shows.html','archive.html','about.html', ...shows.map((s) => `shows/${s.slug}.html`), ...posts.map((p) => `posts/${p.slug}.html`)];
+const sitemapPaths = ['index.html','shows.html','archive.html','about.html', ...publishedShows.map((s) => `shows/${s.slug}.html`), ...publishedPosts.map((p) => `posts/${p.slug}.html`)];
 write(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapPaths.map((p) => `<url><loc>${escapeHtml(config.site_url ? absoluteUrl(p) : p)}</loc></url>`).join('')}</urlset>`);
 
 console.log(`Built ${shows.length} show hub(s) and ${posts.length} post page(s).`);
+console.log(`Published ${publishedShows.length} show hub(s) and ${publishedPosts.length} post page(s).`);
 console.log('Featured image fallback: post → show → default.');

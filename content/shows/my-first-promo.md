@@ -1,4 +1,5 @@
 ---
+published: true
 title: My First Promo
 date: 2026-07-24
 slug: my-first-promo
