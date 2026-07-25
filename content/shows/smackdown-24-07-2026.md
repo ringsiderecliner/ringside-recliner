@@ -1,4 +1,5 @@
 ---
+published: true
 title: SmackDown 24/07/2026
 date: 2026-07-25
 slug: smackdown-24-07-2026
