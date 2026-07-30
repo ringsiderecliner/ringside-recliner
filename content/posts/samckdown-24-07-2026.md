@@ -28,7 +28,7 @@ SmackDown 24/07/2026 started with a contract signing between Gunther and Nick Al
 
 It starts out with some smack talk, goes into signing the contract and then finally ends in a quick brawl. Classic. 
 
-Nick has talked a lot on WWE since that is basically his role this far on the promotion, but now we got to see him go into wrestler mode with him cutting his promo on Gunther. Gunther came out with a predictable angle: "You're jealous you never made it big as a wrestler", which fine there isn't much for Gunther to work with from his side, and I can't imagine what else he really could have said. Nick had the best foundation for this feud, basically calling Gunther a brat who is finally going to get a spanking from his boss.
+Nick has talked a lot on WWE since that is basically his role thus far on the promotion, but now we got to see him go into wrestler mode with him cutting his promo on Gunther. Gunther came out with a predictable angle: "You're jealous you never made it big as a wrestler", which fine there isn't much for Gunther to work with from his side, and I can't imagine what else he really could have said. Nick had the best foundation for this feud, basically calling Gunther a brat who is finally going to get a spanking from his boss.
 
 The way Nick could lay out everything that led up to this contract signing so elegantly is truly a testament to his craft as a performer. His cadence, the calmness in his voice, how articulate he stays throughout just proves how much he deserves this opportunity. 
 
