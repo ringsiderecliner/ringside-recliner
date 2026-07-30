@@ -34,4 +34,12 @@ The way Nick could lay out everything that led up to this contract signing so el
 
 The fighting portion of this segment was also great, but there is one thing I would have wanted to see. Nick shows he's a big guy with powerful strikes, and I think the low blow from Gunther was a good way to stop Nick's momentum and end the brawl with the powerbomb through the table, but just before that Nick had Gunther in a front headlock and it wasn't really clear what Nick was going for in that moment. I think they could have held that a little longer and instead of just the front headlock, we could maybe get a tease of one of Nick's finishers/signatures from his TNA days as Magnus. Just the start of something and hold it for a beat to show that Nick has something big he wants to do to Gunther before we brake out of it and end the brawl with the low blow and powerbomb. 
 
-Other than that, it was a strong segment and I can't wait to see what happens (if something happens) before the last SmackDown before SummerSlam!
+Other than that, it was a strong segment and I can't wait to see what happens (if something happens) before the last SmackDown before SummerSlam! Once that show is done I'll do a deeper dive on how well WWE is treating this feud, what I want to see happen at SummerSlam and how I would book it to go down. 
+
+Until then, I'll leave you with these thoughts:
+
+Gunther looks scared because of the tactics he's using to take Nick down (Low blows and cheap shots)
+
+Nick looks strong for being able to push Gunther into a corner and man handle him a little. 
+
+I hope this isn't a setup for Nick's 1 and only match in WWE and we get to see his transition into a more permanent role inside the ring.
